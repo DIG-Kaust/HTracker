@@ -1,0 +1,15 @@
+name: htracker
+channels:
+  - defaults
+dependencies:
+  - python>=3.6.4
+  - numpy>=1.15.0
+  - scipy>=1.4.0
+  - pandas
+  - scikit-image
+  - pylops
+  - pyproximal
+  - segyio
+  - matplotlib
+  - jupyter
+
