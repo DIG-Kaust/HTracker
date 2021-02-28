@@ -22,8 +22,8 @@ htracker/version.py
 
 # Development #
 .ipynb_checkpoints/
-notebooks
 TODO
+venv
 
 # Documentation #
 docs/build
