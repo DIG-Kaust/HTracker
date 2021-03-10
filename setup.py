@@ -13,7 +13,7 @@ descr = """
 setup(
     name='htracker',
     description=descr,
-    long_description=open(src('README.rst')).read(),
+    long_description=open(src('README.md')).read(),
     long_description_content_type='text/markdown',
     author='cebirnie92',
     author_email='cebirnie@gmail.com',
