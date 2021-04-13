@@ -17,9 +17,9 @@ def callback(x, xhist):
 def RRE(x, xinv):
     return np.linalg.norm(x - xinv) / np.linalg.norm(x)
 
-
 def PSNR(x, xinv):
-    return 10 * np.log10(len(xinv) * np.max(xinv) / np.linalg.norm(x - xinv))
+    return 10 * np.log10(len(xinv) * np.max(xinv)**2 / np.linalg.norm(x-xinv)**2)
+
 
 def joint_inversion_segmentation(d, mback, cl, Op, alpha, beta, delta, tau, mu,
                                  niter=4, l2niter=20, pdniter=100,
