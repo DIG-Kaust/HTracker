@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 
+from scipy.signal import filtfilt
 from pylops.basicoperators import *
 from pylops.signalprocessing import *
 from pylops.utils.wavelets import *
@@ -218,8 +219,6 @@ def multiclass_horizons(ncl, segpd_classes,
         Number of classes
     segpd_classes : np array
         Segmented classes
-    segpd_classes : np array
-        Segmented classes
     spurioseventsize : int
         size in pixels for small shape cleaning
     erode : bool
@@ -297,3 +296,70 @@ def multiclass_horizons(ncl, segpd_classes,
     horizon_df = choose_horizons(all_cl_hlist, difflim=difflim)
 
     return horizon_df
+
+
+def uncertainty_horizons(segpd, horizon_list, hors_names,
+                         tv_thresh=0.1, nwin=4, nsmooth=5):
+    """Estimate horizon uncertainties based on segmentation probabilities
+
+    Parameters
+    ----------
+    segpd : np array
+        Segmentation probabilities
+    horizon_list : pd.DataFrame
+        Horizon list
+    hors_names : list
+        Horizons names
+    tv_thresh : float
+        TV thresholding
+    nwin : int
+        Size of vertical window used for averaging
+    nsmooth : int
+        Smoothing filter lenght
+
+    Returns
+    -------
+    hors_unc : dict
+        Horizons uncertainties
+    tv_tot_raw : np.ndarray
+        Total TV of probabilities
+
+    """
+    # compute overall TV norm
+    nt0, nx, ncl = segpd.shape
+    tv_tot_raw = np.zeros((nt0, nx))
+    for icl in range(ncl):
+        cl_tv = tv(segpd[..., icl])
+        tv_tot_raw += cl_tv
+
+    # create binarized tv map
+    tv_tot = tv_tot_raw.copy()
+    tv_tot[tv_tot < tv_thresh] = 0.
+    tv_tot[tv_tot > tv_thresh] = 1.
+
+    hors_unc = {}
+    for ihor, horkey in enumerate(hors_names):
+        horsel = [h for i, h in horizon_list.iterrows() if
+                  h['chosen'] and h['h_id'] == horkey]
+        horsel_uncs = []
+        for hsel in horsel:
+            horsel_unc = np.zeros(len(hsel['regy']))
+            # average tv mask over time window
+            valmask = ~np.isnan(hsel['regy'])
+            horband = range(-nwin, nwin+1)
+            for i in horband:
+                iy = hsel['regy'][valmask].astype(int) + i
+                iy[iy >= nt0] = nt0 - 1
+                iy[iy < 0] = 0
+                horsel_unc[valmask] += tv_tot[iy, hsel['regx'][valmask].astype(int)]
+            horsel_unc /= len(horband)
+
+            # fix to 1 where sum of TV is zero (likely to have interpreted outside of area)
+            horsel_unc[horsel_unc == 0] = 1.
+
+            # apply smoothing filter
+            horsel_unc = filtfilt(np.ones(nsmooth) / nsmooth, 1, horsel_unc)
+            horsel_uncs.append(horsel_unc)
+        hors_unc[horkey] = horsel_uncs
+
+    return hors_unc, tv_tot_raw
