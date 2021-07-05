@@ -334,8 +334,8 @@ def uncertainty_horizons(segpd, horizon_list, hors_names,
 
     # create binarized tv map
     tv_tot = tv_tot_raw.copy()
-    tv_tot[tv_tot < tv_thresh] = 0.
-    tv_tot[tv_tot > tv_thresh] = 1.
+    tv_tot[tv_tot_raw < tv_thresh] = 0.
+    tv_tot[tv_tot_raw > tv_thresh] = 1.
 
     hors_unc = {}
     for ihor, horkey in enumerate(hors_names):
