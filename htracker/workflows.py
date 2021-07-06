@@ -67,6 +67,9 @@ def detect_and_classify(segpd_classes,
         print('Get horizon points Completed: %s sec' % str(datetime.datetime.now() - s))
 
     # get separated horizons
+    if len(horizon_points_raw) == 0:
+        return None, None, cl_tv
+    
     s = datetime.datetime.now()
     cl_hlist = get_seperated_lines(horizon_points_raw, cl_tv,
                                    nn_lim=nn_lim, line_minlen=line_minlen)
