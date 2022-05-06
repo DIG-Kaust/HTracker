@@ -1,7 +1,7 @@
-# HTracker
+![HTracker](https://github.com/DIG-Kaust/HTracker/blob/main/logo.png)
 
 Reproducible material for **A Joint Inversion-Segmentation approach to Assisted Seismic Interpretation -
-Ravasi M., Birnie, C.** available as [Arxiv Preprint](https://arxiv.org/abs/2102.03860).
+Ravasi M., Birnie, C.** - Open access [GJI Ppaper](https://academic.oup.com/gji/article-abstract/228/2/893/6374557).
 
 ## Project structure
 This repository is organized as follows:
