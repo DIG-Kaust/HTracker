@@ -7,6 +7,7 @@ Ravasi M., Birnie, C.** - Open access [GJI Ppaper](https://academic.oup.com/gji/
 This repository is organized as follows:
 * **htracker**:   python library containing routines for joint inversion-segmentation and tracking of horizons 
 * **notebooks**:  set of jupyter notebooks reproducing figures in the paper
+* **data**:  data required to reproduce figures in the paper
 
 ## Getting started
 To ensure reproducibility of the results, we suggest using the `environment.yml` file when creating an environment.
